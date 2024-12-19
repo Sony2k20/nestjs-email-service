@@ -5,6 +5,13 @@ import { IsEmail, IsNotEmpty, IsOptional, IsString } from 'class-validator';
 
 class SendEmailDto {
   @ApiProperty({
+    example: 'Thomas Müller',
+    description: 'The display name of the email sender',
+  })
+  @IsEmail()
+  fromName: string;
+
+  @ApiProperty({
     example: 'recipient@example.com',
     description: 'The email address of the recipient',
   })
@@ -45,8 +52,8 @@ export class EmailController {
   @Post('send')
   @ApiBody({ type: SendEmailDto })
   async sendEmail(@Body() sendEmailDto: SendEmailDto): Promise<string> {
-    const { to, subject, text, html } = sendEmailDto;
-    await this.emailService.sendEmail(to, subject, text, html);
+    const { fromName, to, subject, text, html } = sendEmailDto;
+    await this.emailService.sendEmail(fromName, to, subject, text, html);
     return 'Email sent successfully';
   }
 }

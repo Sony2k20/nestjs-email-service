@@ -20,6 +20,7 @@ export class EmailService {
   }
 
   async sendEmail(
+    fromName: string,
     to: string,
     subject: string,
     text: string,
@@ -27,7 +28,7 @@ export class EmailService {
   ): Promise<void> {
     try {
       const mailOptions = {
-        from: `"CS-Email-Service" <${this.configService.get<string>('SMTP_USER')}>`,
+        from: `"${fromName}" <${this.configService.get<string>('SMTP_USER')}>`,
         to,
         subject,
         text,
