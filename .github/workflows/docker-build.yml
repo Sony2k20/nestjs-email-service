@@ -63,8 +63,7 @@ jobs:
       - name: Update Deployment YAML with Timestamp
         run: |
           cd target-repo
-          cat helm-charts/${{ github.event.repository.name }}/templates/deployment.yaml
-          yq eval ".metadata.annotations.deploymentTime = env(timestamp)" -i helm-charts/${{ github.event.repository.name }}/templates/deployment.yaml
+          sed -i "/deploymentTime:/s/:.*/: $(date "+%Y-%m-%d %H:%M:%S")/" helm-charts/nestjs-email-service/templates/deployment.yaml
 
       - name: Commit and Push Changes
         run: |
