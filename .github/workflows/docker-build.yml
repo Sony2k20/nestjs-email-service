@@ -46,17 +46,12 @@ jobs:
       - name: Checkout the source repo
         uses: actions/checkout@v3
 
-      - name: Set up Git
-        uses: actions/setup-git@v3
-
-      - name: Configure Git
+      - name: Clone Target Repository
         run: |
           git config user.name "GitHub Actions"
           git config user.email "actions@github.com"
-
-      - name: Clone Target Repository
-        run: |
-          git clone https://github.com/Sony2k20/gitops-deployments.git target-repo
+          git config --global credential.helper cache
+          git clone https://${{ secrets.COMMIT_TO_REPO_TOKEN }}@github.com/Sony2k20/gitops-deployments.git target-repo
           cd target-repo
 
       - name: Generate Timestamp
@@ -74,5 +69,3 @@ jobs:
           git add helm-charts/${{ github.event.repository.name }}/templates/deployment.yaml
           git commit -m "Update deployment timestamp to $timestamp"
           git push origin master
-        env:
-          GITHUB_TOKEN: ${{ secrets.COMMIT_TO_REPO_TOKEN }}
