@@ -66,4 +66,4 @@ jobs:
           git commit -m "Update deployment timestamp to $timestamp"
           git push origin master
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.COMMIT_TO_REPO_TOKEN }}
