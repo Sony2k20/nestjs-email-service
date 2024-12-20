@@ -63,12 +63,12 @@ jobs:
       - name: Update Deployment YAML with Timestamp
         run: |
           cd target-repo
-          sed -i "/deploymentTime:/s/:.*/: $(date "+%Y-%m-%d %H:%M:%S")/" helm-charts/nestjs-email-service/templates/deployment.yaml
+          sed -i "/deploymentTime:/s/:.*/: $(date "+%Y-%m-%d %H:%M:%S")/" helm-charts/${{ github.event.repository.name }}/templates/deployment.yaml
 
       - name: Commit and Push Changes
         run: |
           cd target-repo
-          git add path/to/deployment.yaml
+          git add helm-charts/${{ github.event.repository.name }}/templates/deployment.yaml
           git commit -m "Update deployment timestamp to $timestamp"
           git push origin master
         env:
