@@ -5,6 +5,24 @@ import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
 
+  const allowedOrigins = [
+    'http://localhost:4200',
+    'https://katharinaniesche.de',
+    'https://katy.csnguyen.de',
+  ];
+
+  app.enableCors({
+    origin: (origin, callback) => {
+      if (!origin || allowedOrigins.includes(origin)) {
+        // Allow requests with no origin (like Postman) or from allowed origins
+        callback(null, true);
+      } else {
+        callback(new Error('Not allowed by CORS'));
+      }
+    },
+    methods: 'POST',
+    credentials: true, // Allow cookies if needed
+  });
   // Swagger setup
   const config = new DocumentBuilder()
     .setTitle('Email App')

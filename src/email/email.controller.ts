@@ -51,9 +51,11 @@ export class EmailController {
 
   @Post('send')
   @ApiBody({ type: SendEmailDto })
-  async sendEmail(@Body() sendEmailDto: SendEmailDto): Promise<string> {
+  async sendEmail(
+    @Body() sendEmailDto: SendEmailDto,
+  ): Promise<{ message: string }> {
     const { fromName, to, subject, text, html } = sendEmailDto;
     await this.emailService.sendEmail(fromName, to, subject, text, html);
-    return 'Email sent successfully';
+    return { message: 'Email sent successfully!' };
   }
 }
