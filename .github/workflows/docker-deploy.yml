@@ -1,28 +1,27 @@
-name: Deploy NestJS Docker App
+name: Deploy NestJS Docker App to Prod
 
 on:
   workflow_dispatch:
 
 jobs:
-  build:
+  deploy:
     runs-on: ubuntu-latest
 
     steps:
       - name: SSH deploy to server
-        uses: appleboy/ssh-action@v0.1.7
+        uses: appleboy/ssh-action@v1.2.0
         with:
           host: ${{ secrets.SSH_HOST }}
           username: ${{ secrets.SSH_USERNAME }}
           password: ${{ secrets.SSH_PASSWORD }}
           script: |
-            docker pull sony2k20/nestjs-email-service:latest
-            docker stop nestjs-email-service || true
-            docker rm nestjs-email-service || true
+            docker stop ${{ github.event.repository.name }} || true
+            docker rm ${{ github.event.repository.name }} || true
             docker run -d \
-              --name nestjs-email-service \
-              -p 3000 \
+              --name ${{ github.event.repository.name }} \
+              -p 3000:3000 \
               -e SMTP_HOST=${{ secrets.SMTP_HOST }} \
               -e SMTP_PORT=${{ secrets.SMTP_PORT }} \
               -e SMTP_USER=${{ secrets.SMTP_USER }} \
               -e SMTP_PASS=${{ secrets.SMTP_PASS }} \
-              sony2k20/nestjs-email-service:latest
+              ${{ github.event.repository.name }}:latest
