@@ -53,7 +53,7 @@ jobs:
           cd target-repo
           git config user.name "GitHub Actions"
           git config user.email "actions@github.com"
-          git config --unset-all http.https://github.com/.extraheader
+          git config --unset-all "http.https://github.com/.extraheader"
 
       - name: Generate Timestamp
         id: generate-timestamp
