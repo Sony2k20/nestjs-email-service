@@ -63,6 +63,7 @@ jobs:
       - name: Update Deployment YAML with Timestamp
         run: |
           cd target-repo
+          ls -la
           yq eval ".metadata.annotations.deploymentTime = env(timestamp)" -i gitops-deployments/helm-charts/${{ github.event.repository.name }}/templates/deployment.yaml
 
       - name: Commit and Push Changes
