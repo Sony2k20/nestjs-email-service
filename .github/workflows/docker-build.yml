@@ -43,6 +43,12 @@ jobs:
     runs-on: ubuntu-latest
     needs: build
     steps:
+      - name: Configure Git
+        run: |
+          git config user.name "GitHub Actions"
+          git config user.email "actions@github.com"
+          git config --unset-all http.https://github.com/.extraheader
+
       - name: Clone Target Repository
         run: |
           git clone https://github.com/Sony2k20/gitops-deployments.git target-repo
@@ -60,8 +66,6 @@ jobs:
       - name: Commit and Push Changes
         run: |
           cd target-repo
-          git config user.name "github-actions[bot]"
-          git config user.email "github-actions[bot]@users.noreply.github.com"
           git add helm-charts/${{ github.event.repository.name }}/templates/deployment.yaml
           git commit -m "Update deployment timestamp to $timestamp"
           git push origin master
