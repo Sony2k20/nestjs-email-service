@@ -47,8 +47,6 @@ jobs:
         run: |
           git clone https://github.com/Sony2k20/gitops-deployments.git target-repo
           cd target-repo
-          git config user.name "github-actions[bot]"
-          git config user.email "github-actions[bot]@users.noreply.github.com"
 
       - name: Generate Timestamp
         id: generate-timestamp
@@ -62,6 +60,8 @@ jobs:
       - name: Commit and Push Changes
         run: |
           cd target-repo
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
           git add helm-charts/${{ github.event.repository.name }}/templates/deployment.yaml
           git commit -m "Update deployment timestamp to $timestamp"
           git push origin master
