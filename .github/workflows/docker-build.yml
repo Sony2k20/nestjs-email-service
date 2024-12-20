@@ -50,12 +50,6 @@ jobs:
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
 
-      # - name: Install yq
-      #   run: |
-      #     sudo apt-get update && sudo apt-get install -y jq
-      #     wget https://github.com/mikefarah/yq/releases/latest/download/yq_linux_amd64 -O /usr/bin/yq
-      #     chmod +x /usr/bin/yq
-
       - name: Generate Timestamp
         id: generate-timestamp
         run: echo "timestamp=$(date '+%Y-%m-%d %H:%M:%S')" >> $GITHUB_ENV
@@ -72,4 +66,4 @@ jobs:
           git commit -m "Update deployment timestamp to $timestamp"
           git push origin master
         env:
-          GITHUB_TOKEN: ${{ secrets.COMMIT_TO_REPO_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
