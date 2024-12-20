@@ -19,6 +19,7 @@ jobs:
             docker rm ${{ github.event.repository.name }} || true
             docker run -d \
               --name ${{ github.event.repository.name }} \
+              --network my_network \
               -p 3000:3000 \
               -e SMTP_HOST=${{ secrets.SMTP_HOST }} \
               -e SMTP_PORT=${{ secrets.SMTP_PORT }} \
