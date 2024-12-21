@@ -7,6 +7,8 @@ async function bootstrap() {
 
   const allowedOrigins = [
     'http://localhost:4200',
+    'http://localhost:3000',
+    'http://https://email-service.csnguyen.de',
     'https://katharinaniesche.de',
     'https://katy.csnguyen.de',
   ];
