@@ -5,26 +5,35 @@ import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
 
-  const allowedOrigins = [
-    'http://localhost:4200',
-    'http://localhost:3000',
-    'http://https://email.csnguyen.de',
-    'https://katharinaniesche.de',
-    'https://katy.csnguyen.de',
-  ];
-
+  // Disable CORS (allow everything)
   app.enableCors({
-    origin: (origin, callback) => {
-      if (!origin || allowedOrigins.includes(origin)) {
-        // Allow requests with no origin (like Postman) or from allowed origins
-        callback(null, true);
-      } else {
-        callback(new Error('Not allowed by CORS'));
-      }
-    },
-    methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
-    credentials: true, // Allow cookies if needed
+    origin: '*', // Allow requests from any origin
+    methods: 'GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS', // Allow all methods
+    allowedHeaders: '*', // Allow all headers
+    credentials: true, // Allow credentials (cookies, etc.)
   });
+
+  // const allowedOrigins = [
+  //   'http://localhost:4200',
+  //   'http://localhost:3000',
+  //   'http://https://email.csnguyen.de',
+  //   'https://katharinaniesche.de',
+  //   'https://katy.csnguyen.de',
+  // ];
+
+  // app.enableCors({
+  //   origin: (origin, callback) => {
+  //     if (!origin || allowedOrigins.includes(origin)) {
+  //       // Allow requests with no origin (like Postman) or from allowed origins
+  //       callback(null, true);
+  //     } else {
+  //       callback(new Error('Not allowed by CORS'));
+  //     }
+  //   },
+  //   methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
+  //   credentials: true, // Allow cookies if needed
+  // });
+
   // Swagger setup
   const config = new DocumentBuilder()
     .setTitle('Email App')
