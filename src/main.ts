@@ -8,7 +8,7 @@ async function bootstrap() {
   const allowedOrigins = [
     'http://localhost:4200',
     'http://localhost:3000',
-    'http://https://email-service.csnguyen.de',
+    'http://https://email.csnguyen.de',
     'https://katharinaniesche.de',
     'https://katy.csnguyen.de',
   ];
@@ -22,7 +22,7 @@ async function bootstrap() {
         callback(new Error('Not allowed by CORS'));
       }
     },
-    methods: 'POST',
+    methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
     credentials: true, // Allow cookies if needed
   });
   // Swagger setup
