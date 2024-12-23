@@ -22,6 +22,7 @@ jobs:
               --name ${{ github.event.repository.name }} \
               --network my_network \
               -p 3000:3000 \
+              -e NODE_ENV="prod" \
               -e SMTP_HOST=${{ secrets.SMTP_HOST }} \
               -e SMTP_PORT=${{ secrets.SMTP_PORT }} \
               -e SMTP_USER=${{ secrets.SMTP_USER }} \
