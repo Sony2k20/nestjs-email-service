@@ -5,7 +5,7 @@ import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
 
-  const isProduction = process.env.NODE_ENV === 'production';
+  const env = process.env.NODE_ENV || 'dev';
 
   const allowedOrigins = [
     'http://localhost:4200',
@@ -17,21 +17,19 @@ async function bootstrap() {
 
   app.enableCors({
     origin: (origin, callback) => {
-      // Reject 'null' origin and allow only specified origins
-      if (isProduction && origin === null) {
+      if (env === 'prod' && origin === null) {
         callback(new Error('CORS: null origin is not allowed'));
-      } else if (allowedOrigins.includes(origin)) {
-        callback(null, true); // Allow requests from allowed origins
+      } else if (!origin || allowedOrigins.includes(origin)) {
+        callback(null, true);
       } else {
-        callback(new Error('Not allowed by CORS')); // Reject other origins
+        callback(new Error('Not allowed by CORS'));
       }
     },
     methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
     credentials: true, // Allow cookies or authentication headers
   });
 
-  // Enable Swagger only in development environment
-  if (!isProduction) {
+  if (env !== 'prod') {
     const config = new DocumentBuilder()
       .setTitle('API Documentation')
       .setDescription('API description for the application')
