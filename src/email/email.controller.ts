@@ -49,11 +49,6 @@ class SendEmailDto {
 export class EmailController {
   constructor(private readonly emailService: EmailService) {}
 
-  @Get('get') // This maps to the GET method at '/test'
-  getTestData(): string {
-    return 'This is a test endpoint!';
-  }
-
   @Post('send')
   @ApiBody({ type: SendEmailDto })
   async sendEmail(
