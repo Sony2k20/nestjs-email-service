@@ -1,4 +1,4 @@
-import { Controller, Post, Body } from '@nestjs/common';
+import { Controller, Post, Body, Get } from '@nestjs/common';
 import { ApiTags, ApiBody, ApiProperty } from '@nestjs/swagger';
 import { EmailService } from './email.service';
 import { IsEmail, IsNotEmpty, IsOptional, IsString } from 'class-validator';
@@ -48,6 +48,11 @@ class SendEmailDto {
 @Controller('email')
 export class EmailController {
   constructor(private readonly emailService: EmailService) {}
+
+  @Get() // This maps to the GET method at '/test'
+  getTestData(): string {
+    return 'This is a test endpoint!';
+  }
 
   @Post('send')
   @ApiBody({ type: SendEmailDto })
