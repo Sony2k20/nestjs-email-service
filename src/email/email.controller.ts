@@ -49,7 +49,7 @@ class SendEmailDto {
 export class EmailController {
   constructor(private readonly emailService: EmailService) {}
 
-  @Get() // This maps to the GET method at '/test'
+  @Get('get') // This maps to the GET method at '/test'
   getTestData(): string {
     return 'This is a test endpoint!';
   }
