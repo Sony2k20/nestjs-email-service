@@ -17,7 +17,7 @@ async function bootstrap() {
 
   app.enableCors({
     origin: (origin, callback) => {
-      if (env === 'prod' && origin === null) {
+      if (env !== 'dev' && origin === null) {
         callback(new Error('CORS: null origin is not allowed'));
       } else if (!origin || allowedOrigins.includes(origin)) {
         callback(null, true);
@@ -29,7 +29,7 @@ async function bootstrap() {
     credentials: true, // Allow cookies or authentication headers
   });
 
-  if (env !== 'prod') {
+  if (env === 'dev') {
     const config = new DocumentBuilder()
       .setTitle('API Documentation')
       .setDescription('API description for the application')
