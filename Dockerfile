@@ -26,6 +26,10 @@ COPY --from=builder /app/package.json ./package.json
 COPY --from=builder /app/package-lock.json ./package-lock.json
 RUN npm install --production
 
+# Copy the service account key file (if using build args)
+ARG FIRESTORE_SERVICE_ACCOUNT_KEY
+RUN echo "$FIRESTORE_SERVICE_ACCOUNT_KEY" > /app/service-account-key.json
+
 # Expose application port
 EXPOSE 3000
 

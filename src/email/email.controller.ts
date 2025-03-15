@@ -1,7 +1,8 @@
 import { Controller, Post, Body, Get } from '@nestjs/common';
 import { ApiTags, ApiBody, ApiProperty } from '@nestjs/swagger';
-import { EmailService } from './email.service';
+import { EmailAttachment, EmailService } from './email.service';
 import { IsEmail, IsNotEmpty, IsOptional, IsString } from 'class-validator';
+import { join } from 'path';
 
 class SendEmailDto {
   @ApiProperty({
@@ -56,6 +57,30 @@ export class EmailController {
   ): Promise<{ message: string }> {
     const { fromName, to, subject, text, html } = sendEmailDto;
     await this.emailService.sendEmail(fromName, to, subject, text, html);
+    return { message: 'Email sent successfully!' };
+  }
+
+  @Post('sendWorkbook')
+  @ApiBody({ type: SendEmailDto })
+  async sendWorkbook(
+    @Body() sendEmailDto: SendEmailDto,
+  ): Promise<{ message: string }> {
+    const { fromName, to, subject, text, html } = sendEmailDto;
+    const attachment: EmailAttachment[] = [
+      {
+        filename: 'workbook.pdf',
+        path: join(__dirname, '..', 'assets', 'workbook.pdf'),
+        contentType: 'application/pdf',
+      },
+    ];
+    await this.emailService.sendWorkbook(
+      fromName,
+      to,
+      subject,
+      text,
+      html,
+      attachment,
+    );
     return { message: 'Email sent successfully!' };
   }
 }

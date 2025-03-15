@@ -28,4 +28,6 @@ jobs:
               -e SMTP_PORT=${{ secrets.SMTP_PORT }} \
               -e SMTP_USER=${{ secrets.SMTP_USER }} \
               -e SMTP_PASS=${{ secrets.SMTP_PASS }} \
+              -e FIRESTORE_PROJECT_ID=katy-portfolio \
+              -e FIRESTORE_KEY_FILE=service-account-firestore.json \
               sony2k20/${{ github.event.repository.name }}:latest
