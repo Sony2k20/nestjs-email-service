@@ -30,7 +30,7 @@ RUN npm ci --production --legacy-peer-deps --ignore-scripts
 
 # Copy the service account key file (if using build args)
 ARG FIRESTORE_SERVICE_ACCOUNT_KEY
-RUN echo "$FIRESTORE_SERVICE_ACCOUNT_KEY" > /app/service-account-key.json
+RUN echo "$FIRESTORE_SERVICE_ACCOUNT_KEY" > /app/service-account-firestore.json
 
 # Create a non-root user and switch to it
 RUN addgroup -S appgroup && adduser -S appuser -G appgroup
