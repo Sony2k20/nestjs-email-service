@@ -80,12 +80,19 @@ export class EmailService {
       this.logger.log(`Sending workbook to ${to} with subject "${subject}"`);
       await this.transporter.sendMail(mailOptions);
       this.logger.log(`Workbook sent successfully to ${to}`);
+    } catch (error) {
+      this.logger.error(
+        `Failed to send workbook to ${to}: ${error.message}`,
+        error.stack,
+      );
+      throw error;
+    }
 
+    try {
       const documentExists = await this.fireStoreService.documentExists(
         'contacts',
         to,
       );
-      console.log(documentExists);
       if (!documentExists) {
         console.log('drinne');
         const documentData = {
@@ -96,7 +103,7 @@ export class EmailService {
       }
     } catch (error) {
       this.logger.error(
-        `Failed to send workbook to ${to}: ${error.message}`,
+        `Failed to add firestore entry: ${error.message}`,
         error.stack,
       );
       throw error;
