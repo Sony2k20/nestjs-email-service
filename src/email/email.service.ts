@@ -55,6 +55,7 @@ export class EmailService {
         `Failed to send email to ${to}: ${error.message}`,
         error.stack,
       );
+      throw error;
     }
   }
 
@@ -84,6 +85,7 @@ export class EmailService {
         `Failed to send workbook to ${to}: ${error.message}`,
         error.stack,
       );
+      throw error;
     }
 
     try {
@@ -104,6 +106,7 @@ export class EmailService {
         `Failed to add firestore document: ${error.message}`,
         error.stack,
       );
+      throw error;
     }
   }
 }

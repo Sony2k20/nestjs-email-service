@@ -1,11 +1,30 @@
-import { Injectable, Inject } from '@nestjs/common';
-import * as Firestore from '@google-cloud/firestore';
+import { Injectable } from '@nestjs/common';
+import * as admin from 'firebase-admin';
+import { join } from 'path';
 
 @Injectable()
 export class FirestoreService {
-  constructor(
-    @Inject('FIRESTORE') private readonly firestore: Firestore.Firestore,
-  ) {}
+  private firestore: admin.firestore.Firestore;
+
+  constructor() {
+    if (!admin.apps.length) {
+      admin.initializeApp({
+        credential: admin.credential.cert(
+          join(
+            __dirname,
+            '..',
+            '..',
+            'service-account-firestore.json',
+          ) as admin.ServiceAccount,
+        ),
+      });
+    }
+    this.firestore = admin.firestore();
+  }
+
+  getFirestore(): admin.firestore.Firestore {
+    return this.firestore;
+  }
 
   async getAllDocuments(collectionName: string): Promise<any[]> {
     const snapshot = await this.firestore.collection(collectionName).get();
