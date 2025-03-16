@@ -1,7 +1,6 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import * as nodemailer from 'nodemailer';
-import { FirestoreService } from 'src/firestore/firestore.service';
 
 export type EmailAttachment = {
   filename: string; // Name of the file (e.g., "document.pdf")
@@ -16,10 +15,7 @@ export class EmailService {
   private readonly logger = new Logger(EmailService.name);
   private transporter;
 
-  constructor(
-    private configService: ConfigService,
-    private fireStoreService: FirestoreService,
-  ) {
+  constructor(private configService: ConfigService) {
     this.transporter = nodemailer.createTransport({
       host: this.configService.get<string>('SMTP_HOST'),
       port: this.configService.get<number>('SMTP_PORT'),
@@ -89,18 +85,7 @@ export class EmailService {
     }
 
     try {
-      const documentExists = await this.fireStoreService.documentExists(
-        'contacts',
-        to,
-      );
-      if (!documentExists) {
-        const documentData = {
-          timestamp: new Date(),
-          status: 0,
-        };
-        await this.fireStoreService.addDocument('contacts', to, documentData);
-        this.logger.log(`Add firestore document: ${to}`);
-      }
+      this.logger.log(`Add firestore document: ${to}`);
     } catch (error) {
       this.logger.error(
         `Failed to add firestore document: ${error.message}`,

@@ -5,9 +5,6 @@ import * as Joi from 'joi';
 import { AppController } from './app.controller';
 import { ServeStaticModule } from '@nestjs/serve-static';
 import { join } from 'path';
-import { firestoreProvider } from './firestore/firestore.config';
-import { FirestoreService } from './firestore/firestore.service';
-import { FirestoreModule } from './firestore/firestore.module';
 
 @Module({
   controllers: [AppController],
@@ -24,12 +21,9 @@ import { FirestoreModule } from './firestore/firestore.module';
         SMTP_PORT: Joi.number().default(587),
         SMTP_USER: Joi.string().required(),
         SMTP_PASS: Joi.string().required(),
-        FIRESTORE_PROJECT_ID: Joi.string().required(),
-        FIRESTORE_KEY_FILE: Joi.string().required(),
       }),
     }),
     EmailModule,
-    FirestoreModule,
   ],
 })
 export class AppModule {}
