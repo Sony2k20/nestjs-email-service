@@ -55,7 +55,6 @@ export class EmailService {
         `Failed to send email to ${to}: ${error.message}`,
         error.stack,
       );
-      throw error;
     }
   }
 
@@ -85,7 +84,6 @@ export class EmailService {
         `Failed to send workbook to ${to}: ${error.message}`,
         error.stack,
       );
-      throw error;
     }
 
     try {
@@ -94,19 +92,18 @@ export class EmailService {
         to,
       );
       if (!documentExists) {
-        console.log('drinne');
         const documentData = {
           timestamp: new Date(),
           status: 0,
         };
-        this.fireStoreService.addDocument('contacts', to, documentData);
+        await this.fireStoreService.addDocument('contacts', to, documentData);
+        this.logger.log(`Add firestore document: ${to}`);
       }
     } catch (error) {
       this.logger.error(
-        `Failed to add firestore entry: ${error.message}`,
+        `Failed to add firestore document: ${error.message}`,
         error.stack,
       );
-      throw error;
     }
   }
 }
