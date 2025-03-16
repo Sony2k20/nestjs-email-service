@@ -1,6 +1,8 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import * as nodemailer from 'nodemailer';
+import { CreateUserDto } from 'src/user/dto/create-user.dto';
+import { UserService } from 'src/user/user.service';
 
 export type EmailAttachment = {
   filename: string; // Name of the file (e.g., "document.pdf")
@@ -15,7 +17,10 @@ export class EmailService {
   private readonly logger = new Logger(EmailService.name);
   private transporter;
 
-  constructor(private configService: ConfigService) {
+  constructor(
+    private readonly configService: ConfigService,
+    private readonly userService: UserService,
+  ) {
     this.transporter = nodemailer.createTransport({
       host: this.configService.get<string>('SMTP_HOST'),
       port: this.configService.get<number>('SMTP_PORT'),
@@ -84,11 +89,23 @@ export class EmailService {
       throw error;
     }
 
+    const createUser: CreateUserDto = {
+      email: to,
+      status: 0,
+    };
+
     try {
-      this.logger.log(`Add firestore document: ${to}`);
+      const existingUser = await this.userService.findOneByEmail(to);
+
+      if (!existingUser) {
+        await this.userService.create(createUser);
+        this.logger.log(`Adds user to mongo: ${to}`);
+      } else {
+        this.logger.warn(`User already in database: ${to}`);
+      }
     } catch (error) {
       this.logger.error(
-        `Failed to add firestore document: ${error.message}`,
+        `Failed to add úser to mongo: ${error.message}`,
         error.stack,
       );
       throw error;

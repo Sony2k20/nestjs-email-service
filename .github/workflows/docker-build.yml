@@ -27,17 +27,11 @@ jobs:
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_PASSWORD }}
 
-      - name: Create service account key file
-        run: |
-          echo "${{ secrets.FIRESTORE_KEY_FILE }}" > service-account-firestore.json
-        shell: bash
-
       - name: Build Docker image
         run: |
           docker buildx build \
           --platform linux/arm64,linux/amd64 \
           --tag sony2k20/${{ github.event.repository.name }}:latest \
-          --build-arg FIRESTORE_SERVICE_ACCOUNT_KEY="$(cat service-account-firestore.json)" \
           --push .
 
   update-deployment:

@@ -1,10 +1,11 @@
 import { Module } from '@nestjs/common';
 import { EmailModule } from './email/email.module';
-import { ConfigModule } from '@nestjs/config';
+import { ConfigModule, ConfigService } from '@nestjs/config';
 import * as Joi from 'joi';
 import { AppController } from './app.controller';
 import { ServeStaticModule } from '@nestjs/serve-static';
 import { join } from 'path';
+import { MongooseModule } from '@nestjs/mongoose';
 
 @Module({
   controllers: [AppController],
@@ -21,9 +22,17 @@ import { join } from 'path';
         SMTP_PORT: Joi.number().default(587),
         SMTP_USER: Joi.string().required(),
         SMTP_PASS: Joi.string().required(),
+        MONGODB_URI: Joi.string().required(),
       }),
     }),
     EmailModule,
+    MongooseModule.forRootAsync({
+      imports: [ConfigModule],
+      useFactory: async (configService: ConfigService) => ({
+        uri: configService.get<string>('MONGODB_URI'),
+      }),
+      inject: [ConfigService],
+    }),
   ],
 })
 export class AppModule {}

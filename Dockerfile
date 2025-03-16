@@ -28,10 +28,6 @@ COPY --from=builder /app/package-lock.json ./package-lock.json
 # Install only production dependencies
 RUN npm ci --production
 
-# Copy the service account key file (if using build args)
-ARG FIRESTORE_SERVICE_ACCOUNT_KEY
-RUN echo "$FIRESTORE_SERVICE_ACCOUNT_KEY" > /app/service-account-firestore.json
-
 # Create a non-root user and switch to it
 RUN addgroup -S appgroup && adduser -S appuser -G appgroup
 USER appuser
