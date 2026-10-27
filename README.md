@@ -60,16 +60,27 @@ $ npm run test:cov
 
 ## Deployment
 
-When you're ready to deploy your NestJS application to production, there are some key steps you can take to ensure it runs as efficiently as possible. Check out the [deployment documentation](https://docs.nestjs.com/deployment) for more information.
+Every push to `master` releases a new version and deploys it
+(`.github/workflows/docker-build.yml`):
 
-If you are looking for a cloud-based platform to deploy your NestJS application, check out [Mau](https://mau.nestjs.com), our official platform for deploying NestJS applications on AWS. Mau makes deployment straightforward and fast, requiring just a few simple steps:
+1. The next [semantic version](https://semver.org) is derived from the commit
+   messages since the last `v*.*.*` tag ([Conventional Commits](https://www.conventionalcommits.org)):
 
-```bash
-$ npm install -g mau
-$ mau deploy
-```
+   | Commit message                              | Bump  | Example         |
+   | ------------------------------------------- | ----- | --------------- |
+   | `feat!: ...` or body with `BREAKING CHANGE` | major | 1.4.2 -> 2.0.0  |
+   | `feat: ...` / `feat(scope): ...`            | minor | 1.4.2 -> 1.5.0  |
+   | anything else (`fix:`, `chore:`, ...)       | patch | 1.4.2 -> 1.4.3  |
 
-With Mau, you can deploy your application in just a few clicks, allowing you to focus on building features rather than managing infrastructure.
+2. The Docker image is pushed as `sony2k20/nestjs-email-service:<version>`
+   (plus `<major>.<minor>`, `<major>` and `latest`).
+3. A git tag `v<version>` and a GitHub release with generated notes are created.
+4. The version is written to `app-of-apps/apps/ng-web-portfolio.yaml` in
+   [gitops-deployments](https://github.com/Sony2k20/gitops-deployments); Argo CD
+   rolls it out. A rollback is a tag change there.
+
+When merging a pull request, the commit messages of the PR decide the bump, so
+name the commits (or the squash commit) accordingly.
 
 ## Resources
 
