@@ -1,5 +1,5 @@
 # Stage 1: Build
-FROM node:20-alpine as builder
+FROM node:24-alpine AS builder
 
 # Set working directory
 WORKDIR /app
@@ -15,7 +15,7 @@ COPY . .
 RUN npm run build
 
 # Stage 2: Run
-FROM node:20-alpine
+FROM node:24-alpine
 
 # Set working directory
 WORKDIR /app
@@ -26,7 +26,7 @@ COPY --from=builder /app/package.json ./package.json
 COPY --from=builder /app/package-lock.json ./package-lock.json
 
 # Install only production dependencies
-RUN npm ci --production
+RUN npm ci --omit=dev && npm cache clean --force
 
 # Create a non-root user and switch to it
 RUN addgroup -S appgroup && adduser -S appuser -G appgroup
