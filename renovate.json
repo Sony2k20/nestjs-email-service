@@ -1,0 +1,68 @@
+{
+  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+  "extends": [
+    "config:recommended",
+    ":semanticCommits",
+    ":timezone(Europe/Berlin)"
+  ],
+  "schedule": ["before 6am on monday"],
+  "minimumReleaseAge": "3 days",
+  "labels": ["dependencies"],
+  "osvVulnerabilityAlerts": true,
+  "lockFileMaintenance": {
+    "enabled": true
+  },
+  "packageRules": [
+    {
+      "description": "No automerge: every push to master releases a new image and deploys it, dev tooling included (docker-build.yml counts every non-feat commit as a patch)",
+      "matchPackageNames": ["*"],
+      "automerge": false
+    },
+    {
+      "description": "Keep package.json ranges in sync with the installed versions",
+      "matchManagers": ["npm"],
+      "rangeStrategy": "bump"
+    },
+    {
+      "description": "NestJS packages are released together and must stay on the same major",
+      "groupName": "NestJS",
+      "matchPackageNames": ["@nestjs/**"]
+    },
+    {
+      "description": "NestJS majors need migrations: only create the PR after approval in the Dependency Dashboard",
+      "matchPackageNames": ["@nestjs/**"],
+      "matchUpdateTypes": ["major"],
+      "dependencyDashboardApproval": true
+    },
+    {
+      "description": "Lint tooling in one PR",
+      "groupName": "ESLint",
+      "matchPackageNames": [
+        "eslint",
+        "@eslint/**",
+        "typescript-eslint",
+        "eslint-config-prettier",
+        "eslint-plugin-prettier",
+        "globals",
+        "prettier"
+      ]
+    },
+    {
+      "description": "Test tooling in one PR",
+      "groupName": "Jest",
+      "matchPackageNames": [
+        "jest",
+        "ts-jest",
+        "@types/jest",
+        "supertest",
+        "@types/supertest"
+      ]
+    },
+    {
+      "description": "Node.js (Dockerfile, engines) and its type definitions move together",
+      "groupName": "Node.js",
+      "matchPackageNames": ["node", "@types/node"],
+      "matchUpdateTypes": ["major"]
+    }
+  ]
+}
