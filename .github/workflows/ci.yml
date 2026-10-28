@@ -1,0 +1,34 @@
+name: CI
+on:
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  lint-build-test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v7
+
+      # Keep on the major of the Dockerfile base image; Jest needs >= 24.9 for require(esm)
+      - name: Set up Node.js
+        uses: actions/setup-node@v7
+        with:
+          node-version: '24'
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      # Not "npm run lint": that script passes --fix and would hide fixable errors
+      - name: Lint
+        run: npx eslint "{src,test}/**/*.ts"
+
+      - name: Build
+        run: npm run build
+
+      - name: Unit tests
+        run: npm test -- --passWithNoTests
+
+      - name: E2E tests
+        run: npm run test:e2e
